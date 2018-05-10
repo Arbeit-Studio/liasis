@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, NamedTuple, NewType, Optional
 
-from framework.infrastructure.interfaces import Repository
+from liasis.infrastructure.interfaces import Repository
 
 Response = NamedTuple
 Request = NamedTuple

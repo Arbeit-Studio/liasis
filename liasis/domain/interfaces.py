@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Optional
-from framework.domain import EntityId
+from liasis.domain import EntityId
 
 
 class Entity(ABC):

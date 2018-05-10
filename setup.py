@@ -12,11 +12,11 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'mypackage'
-DESCRIPTION = 'My short description for my project.'
-URL = 'https://github.com/me/myproject'
-EMAIL = 'me@example.com'
-AUTHOR = 'Awesome Soul'
+NAME = 'liasis'
+DESCRIPTION = 'A Clean Framework in Python.'
+URL = 'https://gitlab.com/snowman-labs/liasis.git'
+EMAIL = 'johnny.santos@snowmanlabs.com'
+AUTHOR = 'Johnny Wellington dos Santos'
 REQUIRES_PYTHON = '>=3.6.0'
 VERSION = None
 
@@ -89,7 +89,7 @@ setup(
     version=about['__version__'],
     description=DESCRIPTION,
     long_description=long_description,
-    long_description_content_type='text/markdown'
+    long_description_content_type='text/markdown',
     author=AUTHOR,
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
