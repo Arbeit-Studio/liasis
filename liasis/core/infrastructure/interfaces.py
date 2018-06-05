@@ -25,3 +25,13 @@ class Repository(ABC):
     @abstractmethod
     def filter(self, **filters) -> List[Entity]:
         raise NotImplementedError
+
+
+
+class Service(ABC):
+    """
+    Just like Repository, a Service gather any implementation details to 
+    handle an external integration and exposes a better api to be used by
+    the Usecase.
+    """
+    pass

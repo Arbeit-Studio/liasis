@@ -1,10 +1,22 @@
-from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from abc import ABC, abstractmethod, ABCMeta
 from typing import Any, Dict, NamedTuple, NewType, Optional
 
-from liasis.infrastructure.interfaces import Repository
+from liasis.infrastructure import Repository
 
-Response = NamedTuple
-Request = NamedTuple
+
+class Base(mata=ABCMeta):
+    pass
+
+
+@dataclass
+class Request:
+    pass
+
+
+@dataclass
+class Response:
+    pass
 
 
 class Adapter(ABC):
@@ -14,7 +26,7 @@ class Adapter(ABC):
         raise NotImplementedError
 
 
-class OutputPort(ABC):
+class Presenter(ABC):
 
     def __init__(self, adapter: Adapter) -> None:
         self._adapter = adapter
@@ -24,9 +36,9 @@ class OutputPort(ABC):
         raise NotImplementedError
 
 
-class InputPort(ABC):
+class UseCase(ABC):
 
-    def __init__(self, repository: Repository, presenter: OutputPort = None) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         self._repository = repository
         self._presenter = presenter
 

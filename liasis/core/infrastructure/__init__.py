@@ -1,3 +1,3 @@
 from .interfaces import *
 
-__all__ = ['Repository']
+__all__ = ['Repository', 'Service']
