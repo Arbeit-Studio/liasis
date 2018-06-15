@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, List, Optional
 
-from liasis.domain import Entity, EntityId
+from liasis.core.domain import Entity, EntityId
 
 
 class Repository(ABC):

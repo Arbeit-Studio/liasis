@@ -2,13 +2,15 @@ from dataclasses import dataclass
 from abc import ABC, abstractmethod, ABCMeta
 from typing import Union
 
-from liasis.infrastructure import Repository
+from liasis.core.domain import DataStructure
+from liasis.core.application import Request, Response
+from liasis.core.infrastructure import Repository
 
 
 class Adapter(ABC):
 
     @abstractmethod
-    def __call__(self, data: NamedTuple):
+    def __call__(self, data: DataStructure):
         raise NotImplementedError
 
 

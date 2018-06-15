@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from typing import Union, NamedTuple
-from liasis.domain import DataStructure
+from liasis.core.domain import DataStructure
 
 
 @dataclass

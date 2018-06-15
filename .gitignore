@@ -103,5 +103,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# vscode
+
 .vscode/
+.sonarlint/
+.scannerwork/
+.DS_Store
