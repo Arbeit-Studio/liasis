@@ -1,8 +1,8 @@
 import argparse
 
-from __version__ import __version__
+from .__version__ import __version__
 
-import scaffold
+from . import scaffold
 
 # TODO: Finish this!
 def new(args):
