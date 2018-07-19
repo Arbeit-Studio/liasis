@@ -99,7 +99,7 @@ setup(
     # py_modules=['mypackage'],
 
     entry_points={
-        'console_scripts': ['liasis=liasis'],
+        'console_scripts': ['liasis=liasis:cli'],
     },
     install_requires=REQUIRED,
     include_package_data=True,
