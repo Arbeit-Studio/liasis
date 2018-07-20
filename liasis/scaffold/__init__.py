@@ -1,10 +1,22 @@
 from pathlib import Path
-
-def new_project(name: str, directory: str = None) -> None:
-    directory = '.' if directory is None else directory
-    print('project', name, directory)
+from shutil import copytree
 
 
-def new_app(name: str, directory: str = None) -> None:
-    directory = './apps' if directory is None else directory
-    print('app', name, directory)
+LIASIS_ROOT = Path(__file__).parent
+
+PROJECT_SKELETON = Path(str(LIASIS_ROOT) + '/project_skeleton')
+APP_SKELETON = Path(str(LIASIS_ROOT) + '/app_skeleton')
+
+
+def new_project(name: str, directory: str) -> None:
+    path = Path('.' if directory is None else directory)
+    destination = str(path.absolute()) + '/' + name
+    if path.exists():
+        copytree(str(PROJECT_SKELETON.absolute()), destination)
+        
+
+def new_app(name: str, directory: str) -> None:
+    path = Path('./apps' if directory is None else directory)
+    destination = str(path.absolute()) + '/' + name
+    if path.exists():
+        copytree(str(APP_SKELETON.absolute()), destination)
