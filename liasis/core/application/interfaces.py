@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from abc import ABC, abstractmethod, ABCMeta
 from typing import Union
 
-from liasis.core.domain import DataStructure
+from liasis.core import DataStructure
 from liasis.core.application import Request, Response
 from liasis.core.infrastructure import Repository
 
@@ -27,8 +27,8 @@ class Presenter(ABC):
 class UseCase(ABC):
 
     def __init__(self, repository: Repository, presenter: Presenter = None) -> None:
-        self._repository = repository
-        self._presenter = presenter
+        self.repository = repository
+        self.presenter = presenter
 
     @abstractmethod
     def __call__(self, request: Request) -> Response:

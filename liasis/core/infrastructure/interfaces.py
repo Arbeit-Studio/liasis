@@ -7,7 +7,7 @@ from liasis.core.domain import Entity, EntityId
 class Repository(ABC):
 
     @abstractmethod
-    def __init__(self, session = None) -> None:
+    def __init__(self, **options) -> None:
         raise NotImplementedError
 
     @abstractmethod
