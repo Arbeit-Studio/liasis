@@ -1,3 +1,4 @@
+from typing import Text
 from liasis.core.config import AppConfig
 
 
