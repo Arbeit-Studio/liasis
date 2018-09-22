@@ -1,0 +1,1 @@
+class DoesNotExist(Exception): pass

@@ -33,7 +33,12 @@ class Presenter(Callable, Initializable):
     def __call__(self, response: Response, *args, **kwargs) -> Union[Adapter, Text]:
         if response.error:
             return str(response.error)
-        return self.adapter(response.data, *args, **kwargs)
+        if response.data is None:
+            return {}
+        if isinstance(response.data, list):
+            return [self.adapter(**vars(each)) for each in response.data]
+        else:
+            return self.adapter(response.data, *args, **kwargs)
 
 
 class UseCase(Callable, Initializable):
@@ -65,9 +70,8 @@ class Repository(Initializable):
         raise NotImplementedError
 
     @abstractmethod
-    def filter(self, **filters) -> List[Entity]:
+    def search(self, **params) -> List[Entity]:
         raise NotImplementedError
-
 
 
 class Service(Initializable):

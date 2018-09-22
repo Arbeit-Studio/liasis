@@ -20,9 +20,8 @@ class Entity(Type):
     def __init__(self, id: Optional[EntityId], *args, **kwargs) -> None:
         raise NotImplementedError
 
-    @abstractmethod
     def __eq__(self, other):
-        raise NotImplementedError
+        return vars(self) == vars(others)
 
     def __repr__(self):
         class_name = self.__class__.__name__
