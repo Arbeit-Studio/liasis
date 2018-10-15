@@ -21,7 +21,7 @@ class Entity(Type):
         raise NotImplementedError
 
     def __eq__(self, other):
-        return vars(self) == vars(others)
+        return vars(self) == vars(other)
 
     def __repr__(self):
         class_name = self.__class__.__name__
