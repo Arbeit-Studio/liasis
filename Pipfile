@@ -4,8 +4,10 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+typing-extensions = "*"
 
 [dev-packages]
+mypy = "*"
 
 [requires]
 python_version = "3.7"

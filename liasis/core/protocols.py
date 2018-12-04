@@ -1,102 +1,53 @@
-from abc import abstractmethod
-from typing import List, Union, Any, Text
-from liasis.core.types import Protocol, Type, EntityId, Entity
+from typing import List, Any
+
+from typing_extensions import Protocol
+
+from liasis.core.types import Type, EntityId, Entity
 from liasis.core.datastructures import Request, Response
 
-class Initializable(Protocol):
 
-    @abstractmethod
-    def __init__(self, *args, **kwargs):
-        raise NotImplementedError
-
-
-class Callable(Protocol):
-    """
-    Describes a callable capable of dependency injection through the __init__ method.
-    """
-
-    @abstractmethod
-    def __call__(self, *args, **kwargs) -> Any:
-        raise NotImplementedError
-
-
-class Adapter(Initializable):
+class Adapter(Protocol):
     pass
 
 
-class Presenter(Callable, Initializable):
+class Presenter(Protocol):
+
+    def __init__(self, adapter: Adapter, *args, **kwargs) -> None: ...
+
+    def __call__(self, response: Response, *args, **kwargs) -> Any: ...
 
 
-    def __init__(self, adapter: Adapter, *args, **kwargs) -> None:
-        self.adapter = adapter
+class UseCase(Protocol):
 
-    def __call__(self, response: Response, *args, **kwargs) -> Union[Adapter, Text]:
-        if response.error:
-            return str(response.error)
-        if response.data is None:
-            return {}
-        if isinstance(response.data, list):
-            return [self.adapter(**vars(each)) for each in response.data]
-        else:
-            return self.adapter(response.data, *args, **kwargs)
+    def __init__(self, presenter: Presenter, *args, **kwargs) -> None: ...
+
+    def __call__(self, request: Request) -> Response: ...
 
 
-class UseCase(Callable, Initializable):
-
-    @abstractmethod
-    def __init__(self, presenter: Presenter, *args, **kwargs) -> None:
-        raise NotImplementedError
-
-    @abstractmethod
-    def __call__(self, request: Request) -> Response:
-        raise NotImplementedError
-
-
-class Repository(Initializable):
+class Repository(Protocol):
     """
-    Repository is a source of data, specifically the state of the application entities.
+    A Repostory is responsible for storing and retrieving entities.
     No matter where the data come from, it could be a database or a plain file.
     """
-    @abstractmethod
-    def save(self, entity: Entity) -> Entity:
-        raise NotImplementedError
+    def save(self, entity: Entity) -> Entity: ...
 
-    @abstractmethod
-    def get(self, id: EntityId) -> Entity:
-        raise NotImplementedError
+    def get(self, id: EntityId) -> Entity: ...
 
-    @abstractmethod
-    def delete(self, id: EntityId) -> None:
-        raise NotImplementedError
+    def delete(self, id: EntityId) -> None: ...
 
-    @abstractmethod
-    def search(self, **params) -> List[Entity]:
-        raise NotImplementedError
+    def search(self, **kwargs) -> List[Entity]: ...
 
 
-class Service(Initializable):
+class Service(Protocol):
     """
-    Service gather any implementation details to 
-    handle an external integration and exposes a better api to be used by
-    the Usecase.
+    Services, different from repositories, do not handle storing and retrieval
+    of entities state. It's more suitable for things like, e-mails sending.
     """
-    pass
 
 
-class UnityOfWork(Protocol):
+class Gateway(Protocol):
     """
-    A context manager to encapsulate a execution scope.
+    Gateways are responsible for integrating with external sources and abstract
+    implementation details from inner components like Repositories and Services.
+    Examples of Gateways are, REST and SOAP API clients.
     """
-    @abstractmethod
-    def __enter__(self):
-        raise NotImplementedError
-
-    @abstractmethod
-    def __exit__(self, exc_type, exc_value, traceback):
-        raise NotImplementedError
-
-
-class DatabaseConnector(UnityOfWork, Initializable):
-    @abstractmethod
-    def connect(self, *args, **kwargs):
-        raise NotImplementedError

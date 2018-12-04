@@ -108,3 +108,8 @@ venv.bak/
 .sonarlint/
 .scannerwork/
 .DS_Store
+
+# Sublime
+
+*.sublime-workspace
+*.sublime-project
