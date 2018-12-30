@@ -102,14 +102,3 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-
-
-.vscode/
-.sonarlint/
-.scannerwork/
-.DS_Store
-
-# Sublime
-
-*.sublime-workspace
-*.sublime-project
