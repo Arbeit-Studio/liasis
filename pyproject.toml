@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "liasis"
+version = "0.1.0"
+description = "A Pythonic Clean Architecture for the Web"
+authors = ["Johnny <johnny.w.santos@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+typing-extensions = "^3.6"
+
+[tool.poetry.dev-dependencies]
+mypy = "^0.650.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
