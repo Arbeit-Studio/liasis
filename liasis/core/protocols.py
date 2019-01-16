@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Iterable
 
 from typing_extensions import Protocol
 
@@ -7,7 +7,8 @@ from liasis.core.datastructures import Request, Response
 
 
 class Adapter(Protocol):
-    pass
+
+    def __call__(self, response, many=False): ...
 
 
 class Presenter(Protocol):
@@ -26,7 +27,7 @@ class UseCase(Protocol):
 
 class Repository(Protocol):
     """
-    A Repostory is responsible for storing and retrieving entities.
+    A Repository is responsible for storing and retrieving entities.
     No matter where the data come from, it could be a database or a plain file.
     """
     def save(self, entity: Entity) -> Entity: ...

@@ -14,7 +14,7 @@ class DataStructure:
 class Request(DataStructure):
     """
     Request attributes are specific for each UseCase, so te base dataclass
-    doesn't define any default attributes. It's a job for the UseCase devolope
+    doesn't define any default attributes. It's a job for the UseCase devoloper
     to define how the request should look like.
     """
     pass
