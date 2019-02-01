@@ -1,3 +1,4 @@
+from typing import Optional
 from dataclasses import dataclass
 
 
@@ -29,5 +30,5 @@ class Response(DataStructure):
     we have the minimum to handle success, failure and data that should be 
     passed to the presenter in order to create a presentation accordinly.
     """
-    data: DataStructure
-    error: Exception
+    data: Optional[DataStructure]
+    error: Optional[Exception]

@@ -1,4 +1,7 @@
-class DomainError(Exception):
+from liasis.core.errors import Error
+
+
+class DomainError(Error):
     """
     Domain Error is used to indicate an error in the domain layer.
     """

@@ -2,13 +2,13 @@ from typing import List, Any, Iterable
 
 from typing_extensions import Protocol
 
-from liasis.core.types import Type, EntityId, Entity
+from liasis.core.types import EntityId, Entity
 from liasis.core.datastructures import Request, Response
 
 
 class Adapter(Protocol):
 
-    def __call__(self, response, many=False): ...
+    def __call__(self, response, *args, **kwargs): ...
 
 
 class Presenter(Protocol):
@@ -22,7 +22,7 @@ class UseCase(Protocol):
 
     def __init__(self, presenter: Presenter, *args, **kwargs) -> None: ...
 
-    def __call__(self, request: Request) -> Response: ...
+    def __call__(self, request: Request) -> Presenter: ...
 
 
 class Repository(Protocol):

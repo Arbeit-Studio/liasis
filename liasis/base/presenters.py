@@ -19,8 +19,8 @@ class BaseHttpPresenter(Presenter):
         return self.on_success(response)
 
     def on_success(self, response):
-        many = isinstance(response, Iterable)
-        return self.adapter(response, many), 200
+        collection = isinstance(response, Iterable)
+        return self.adapter(response, collection), 200
 
     def on_domain_error(self, response):
         return self.adapter(response), 409

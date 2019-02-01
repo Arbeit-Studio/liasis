@@ -1,4 +1,7 @@
-class InfrastructureError(Exception):
+from liasis.core.errors import Error
+
+
+class InfrastructureError(Error):
     """
     An Error on infrastructure layer.
     """
@@ -18,4 +21,3 @@ class NetworkError(IOError):
 
 class ConfigError(InfrastructureError):
     """Base class for exceptions related to configuration"""
-    pass
