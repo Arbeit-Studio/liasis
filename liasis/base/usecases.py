@@ -1,27 +1,29 @@
-from typing import Any, Optional
+from typing import Any, Optional, Callable
 from liasis.core.errors import Error
-from liasis.core.protocols import UseCase, Presenter
-from liasis.core.datastructures import Request, Response
+from liasis.core.protocols import UseCase, Presenter, Request, Response
 
 
 class BaseUseCase(UseCase):
 
     def __init__(self, presenter: Presenter, *args, **kwargs) -> None:
         self.presenter = presenter
-        self.data = None
-        self.error = None
 
     def __call__(self, request: Request) -> Presenter:
-        response = Response(None, None)
         try:
-            response = self.handle(request)
-        except Exception as e:
-            response = self.on_error(e)
+            response = self.on_success(self.handle(request))
+        except Exception as error:
+            response = self.on_error(error)
         finally:
-            return self.presenter(response)
-
+            return self.respond(response)
+            
     def handle(self, request: Request) -> Response:
-        raise NotImplementedError
+        return Response()
+
+    def on_success(self, response: Response) -> Response:
+        return response
 
     def on_error(self, error: Exception) -> Response:
-        return Response(data=None, error=error)
+        return Response(error=error)
+
+    def respond(self, response: Response) -> Presenter:
+        return self.presenter(response)

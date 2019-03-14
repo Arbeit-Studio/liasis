@@ -1,6 +1,6 @@
 from collections import Iterable
 from liasis.core import Presenter, Adapter
-from liasis.core.exceptions import DomainError, InfrastructureError
+from liasis.core.errors import DomainError, InfrastructureError
 
 
 # TODO: Handle cases like, search, pagination, and errors.

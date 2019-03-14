@@ -1,9 +1,23 @@
-from typing import List, Any, Iterable
-
+from typing import List, Any, Iterable, Mapping
 from typing_extensions import Protocol
-
 from liasis.core.types import EntityId, Entity
-from liasis.core.datastructures import Request, Response
+from collections import UserDict
+
+
+class Request(UserDict): ...
+
+
+class Response(UserDict):
+
+    def __init__(self, *args, error: Exception = None, **kwargs):
+        if error:
+            self.error = error
+        super().__init__(*args, **kwargs)
+
+    def __bool__(self):
+        if self.error:
+            return False
+        return True
 
 
 class Adapter(Protocol):
@@ -52,3 +66,4 @@ class Gateway(Protocol):
     implementation details from inner components like Repositories and Services.
     Examples of Gateways are, REST and SOAP API clients.
     """
+
