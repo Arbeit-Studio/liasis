@@ -1,9 +1,7 @@
-from liasis.core import DataStructure
-from dataclasses import dataclass
+from collections import UserDict
 
 
-@dataclass
-class AppConfig(DataStructure):
+class AppConfig(UserDict):
     """
     A Data Structure to describe an Application Configurations.
 
