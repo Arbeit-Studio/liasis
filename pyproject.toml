@@ -7,8 +7,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-typing-extensions = "^3.6"
-starlette = {version = "^0.9.10",optional = true}
+typing-extensions = "^3.7"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.650.0"
