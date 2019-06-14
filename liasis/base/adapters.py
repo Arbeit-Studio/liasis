@@ -1,8 +1,8 @@
-from liasis.core.protocols import Adapter
+from liasis.core.protocols import AdapterProtocol
 import json
 
 
-class BaseAPIAdapter(Adapter):
+class BaseAPIAdapter(AdapterProtocol):
 
     def __call__(self, response, *args, **kwargs) -> str:
         if response.error:

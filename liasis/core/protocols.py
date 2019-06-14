@@ -4,42 +4,36 @@ from liasis.core.types import EntityId, Entity
 from collections import UserDict
 
 
-class Request(UserDict): ...
+class RequestProtocol(Protocol): ...
 
 
-class Response(UserDict):
+class ResponseProtocol(Protocol):
 
-    def __init__(self, *args, error: Exception = None, **kwargs):
-        if error:
-            self.error = error
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, error: Exception = None, **kwargs): ...
 
-    def __bool__(self):
-        if self.error:
-            return False
-        return True
+    def __bool__(self): ...
 
 
-class Adapter(Protocol):
+class AdapterProtocol(Protocol):
 
     def __call__(self, response, *args, **kwargs): ...
 
 
-class Presenter(Protocol):
+class PresenterProtocol(Protocol):
 
-    def __init__(self, adapter: Adapter, *args, **kwargs) -> None: ...
+    def __init__(self, adapter: AdapterProtocol, *args, **kwargs) -> None: ...
 
-    def __call__(self, response: Response, *args, **kwargs) -> Any: ...
-
-
-class UseCase(Protocol):
-
-    def __init__(self, presenter: Presenter, *args, **kwargs) -> None: ...
-
-    def __call__(self, request: Request) -> Presenter: ...
+    def __call__(self, response: ResponseProtocol, *args, **kwargs) -> Any: ...
 
 
-class Repository(Protocol):
+class UseCaseProtocol(Protocol):
+
+    def __init__(self, presenter: PresenterProtocol, *args, **kwargs) -> None: ...
+
+    def __call__(self, request: RequestProtocol) -> PresenterProtocol: ...
+
+
+class RepositoryProtocol(Protocol):
     """
     A Repository is responsible for storing and retrieving entities.
     No matter where the data come from, it could be a database or a plain file.
@@ -53,14 +47,14 @@ class Repository(Protocol):
     def search(self, **kwargs) -> List[Entity]: ...
 
 
-class Service(Protocol):
+class ServiceProtocol(Protocol):
     """
     Services, different from repositories, do not handle storing and retrieval
     of entities state. It's more suitable for things like, e-mails sending.
     """
 
 
-class Gateway(Protocol):
+class GatewayProtocol(Protocol):
     """
     Gateways are responsible for integrating with external sources and abstract
     implementation details from inner components like Repositories and Services.
