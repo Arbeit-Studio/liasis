@@ -4,12 +4,15 @@ from liasis.core.types import EntityId, Entity
 from collections import UserDict
 
 
-class RequestProtocol(Protocol): ...
+class RequestProtocol(Protocol):
+
+    data: dict
 
 
 class ResponseProtocol(Protocol):
 
-    def __init__(self, *args, error: Exception = None, **kwargs): ...
+    data: dict
+    error: Exception = None
 
     def __bool__(self): ...
 
