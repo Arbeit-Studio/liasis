@@ -6,7 +6,7 @@ class Error(Exception):
         self.message = message
     
     def __str__(self):
-        return f"{self.title}: {self.message} Código:{self.code}"
+        return f"{self.title}: {self.message} Code:{self.code}"
 
 
 from .domain import *
