@@ -1,12 +1,12 @@
 from collections import UserDict
-from typing import Type
+from typing import Type, Optional
 import json
 from liasis.core.entity import Entity
 
 
 class DTO(dict):
-    __entity = User
-    
+    __entity: Optional[Type[Entity]] = None
+
     def __getattr__(self, name):
         return self.get(name)
 
@@ -17,7 +17,8 @@ class DTO(dict):
             raise AttributeError('This DTO does not represents an Entity.')
 
 
-class Request(DTO): ...
+class Request(DTO):
+    pass
 
 
 class Response(DTO):
@@ -30,16 +31,3 @@ class Response(DTO):
         if self.errors:
             return False
         return True
-
-
-class EntityData(EntityDataProtocol):
-
-    __entity__: Type[Entity] = None
-
-    def __init__(self) -> None:
-        if self.__entity__:
-            pass
-
-    def __eq__(self, other: 'EntityData') -> bool: ...
-
-    def __repr__(self) -> str: ...    

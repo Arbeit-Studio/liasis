@@ -113,3 +113,7 @@ venv.bak/
 
 *.sublime-workspace
 *.sublime-project
+
+.idea
+
+pip-wheel-metadata
