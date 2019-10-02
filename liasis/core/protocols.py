@@ -1,20 +1,8 @@
-from typing import List, Any, Iterable, Mapping
+from abc import abstractmethod
+from typing import List, Any, Iterable, Mapping, Optional
 from typing_extensions import Protocol
-from liasis.core.types import EntityId, Entity
+from liasis.core.entity import EntityId, Entity
 from collections import UserDict
-
-
-class RequestProtocol(Protocol):
-
-    data: dict
-
-
-class ResponseProtocol(Protocol):
-
-    data: dict
-    error: Exception = None
-
-    def __bool__(self): ...
 
 
 class AdapterProtocol(Protocol):
@@ -24,7 +12,8 @@ class AdapterProtocol(Protocol):
 
 class PresenterProtocol(Protocol):
 
-    def __init__(self, adapter: AdapterProtocol, *args, **kwargs) -> None: ...
+    def __init__(self, adapter: AdapterProtocol, *args, **kwargs) -> None:
+        self.adapter = adapter
 
     def __call__(self, response: ResponseProtocol, *args, **kwargs) -> Any: ...
 
@@ -32,6 +21,7 @@ class PresenterProtocol(Protocol):
 class UseCaseProtocol(Protocol):
 
     def __init__(self, presenter: PresenterProtocol, *args, **kwargs) -> None: ...
+        
 
     def __call__(self, request: RequestProtocol) -> PresenterProtocol: ...
 
@@ -63,4 +53,3 @@ class GatewayProtocol(Protocol):
     implementation details from inner components like Repositories and Services.
     Examples of Gateways are, REST and SOAP API clients.
     """
-
