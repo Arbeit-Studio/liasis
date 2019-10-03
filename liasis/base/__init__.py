@@ -1,1 +1,1 @@
-from .events import BaseEventDispatcher
+from .events import BaseNotifier

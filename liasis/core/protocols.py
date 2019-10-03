@@ -56,7 +56,7 @@ class GatewayProtocol(Protocol):
     """
 
 
-class EventListener(Protocol):
+class ListenerProtocol(Protocol):
     """
     Any object which need to listen to a event must implement the EventListener
     protocol.
@@ -67,19 +67,19 @@ class EventListener(Protocol):
         raise NotImplementedError
 
 
-ListenersDict = Dict[Type[Event], Set[EventListener]]
+ListenersMap = Dict[Type[Event], Set[ListenerProtocol]]
 
 
-class EventDispatcher(Protocol):
+class NotifierProtocol(Protocol):
     """
     Manages events subscription and dispatching for different types of events.
     """
-    listeners: ListenersDict
+    listeners: ListenersMap
 
-    def subscribe(self, event: Type[Event], listener: EventListener):
+    def subscribe(self, event: Type[Event], listener: ListenerProtocol):
         self.listeners.setdefault(event, set()).add(listener)
 
-    def unsubscribe(self, event: Type[Event], listener: EventListener):
+    def unsubscribe(self, event: Type[Event], listener: ListenerProtocol):
         self.listeners.setdefault(event, set()).discard(listener)
 
     def notify(self, event: Event):

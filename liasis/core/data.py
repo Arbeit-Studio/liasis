@@ -1,20 +1,21 @@
-from collections import UserDict
 from typing import Type, Optional
-import json
 from liasis.core.entity import Entity
 
 
 class DTO(dict):
     __entity: Optional[Type[Entity]] = None
 
-    def __getattr__(self, name):
-        return self.get(name)
-
     def entity(self):
         if self.__entity:
             return self.__entity(**self)
         else:
             raise AttributeError('This DTO does not represents an Entity.')
+
+    def __getattr__(self, name):
+        return self.get(name)
+
+    def __repr__(self):
+        return "{self.__entity.__class__.__name__}DTO"
 
 
 class Request(DTO):
