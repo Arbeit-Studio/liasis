@@ -1,7 +1,8 @@
 from abc import abstractmethod
-from typing import List, Any, Dict, Type, Set
+from typing import List, Any, Dict, Type, Set, ClassVar
 from typing_extensions import Protocol
 
+from liasis.core.errors import InvalidEventError, InvalidEventVersionError, InvalidEventEntityError
 from liasis.core.data import Response, Request
 from liasis.core.entity import EntityId, Entity
 
@@ -83,5 +84,70 @@ class NotifierProtocol(Protocol):
         self.listeners.setdefault(event, set()).discard(listener)
 
     def notify(self, event: Event):
-        for listener in self.listeners.get(event.__class__):
+        for listener in self.listeners.setdefault(event.__class__, set()):
             listener.notify(event)
+
+
+class State(Protocol):
+    """
+    Represents a state of an object, also handle state transition when receives
+    a event.
+    """
+    entity: Entity
+    events: ClassVar[List[Event]]
+
+    def on(self, event: Event):
+        """
+        The public API for the event, it receives an event to be handled.
+        :param event: Event
+        """
+        self.validate_event(event)
+        self.validate_version(event)
+        self.validate_entity(event)
+        return self.handle(event)
+
+    @abstractmethod
+    def handle(self, event: Event) -> Entity:
+        """
+        The handle method should be implemented by each State subclass, so it
+        can handle it's events list.
+        :param event: Event
+        :return:
+        """
+        raise NotImplementedError
+
+    def validate_event(self, event: Event):
+        """
+        Check if the State can handle the incoming event.
+        :param event: Event
+        """
+        if event.__class__ not in self.events:
+            raise InvalidEventError(
+                f"{self.__class__.__name__} received a invalid event "
+                f"{event.__class__.__name__}.")
+
+    def validate_version(self, event: Event):
+        """
+        Check if the incoming event has the right version.
+        :param event:
+        """
+        if event.version is not self.entity.version + 1:
+            raise InvalidEventVersionError(
+                f"{self.entity.__class__.__name__}(v{self.entity.version}) received a "
+                f"invalid event {event.__class__.__name__}(v{event.version})")
+
+    def validate_entity(self, event: Event):
+        """
+        Validate if the Entity from the incoming Event is the same of State.
+        :param event:
+        """
+        if event.entity_id != self.entity.id:
+            raise InvalidEventEntityError(
+                f"{self.entity.__class__.__name__}(entity:{self.entity.id}) received a "
+                f"invalid event {event.__class__.__name__}(entity:{event.entity_id})")
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return self.__class__.__name__
