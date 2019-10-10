@@ -1,11 +1,16 @@
-from dataclasses import dataclass
-from typing import Type, Optional
-from liasis.core.entity import Entity
+from dataclasses import dataclass, asdict
+from typing import Optional
 
 
 @dataclass
 class DTO:
-    pass
+
+    @classmethod
+    def of(cls, obj: object) -> 'DTO':
+        return cls(**obj.__dict__)
+
+    def asdict(self):
+        return asdict(self)
 
 
 @dataclass
@@ -15,5 +20,10 @@ class Request(DTO):
 
 @dataclass
 class Response(DTO):
-    data: Optional[DTO] = None
-    error: Optional[Exception] = None
+    data: DTO = None
+    error: Exception = None
+
+    @classmethod
+    def of(cls, obj: object) -> 'Response':
+        dto = cls.__annotations__['data']
+        return cls(data=dto(**obj.__dict__))

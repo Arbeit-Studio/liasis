@@ -1,8 +1,8 @@
 from liasis import Singleton
-from liasis.core import NotifierProtocol, ListenersMap
+from liasis.core import Notifier, ListenersMap
 
 
-class BaseNotifier(Singleton, NotifierProtocol):
+class BaseNotifier(Singleton, Notifier):
     """
     A singleton implementation of the EventDispatcher.
     """

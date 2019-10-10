@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import List, Any, Dict, Type, Set, ClassVar
+from typing import List, Any, Dict, Type, Set, ClassVar, TypeVar, Union
 from typing_extensions import Protocol
 
 from liasis.core.errors import InvalidEventError, InvalidEventVersionError, InvalidEventEntityError
@@ -9,47 +9,70 @@ from liasis.core.entity import EntityId, Entity
 from liasis.core.event import Event
 
 
-class AdapterProtocol(Protocol):
+class Adapter(Protocol):
 
     def __call__(self, response, *args, **kwargs): ...
 
 
-class PresenterProtocol(Protocol):
+class Presenter(Protocol):
 
-    def __init__(self, adapter: AdapterProtocol, *args, **kwargs) -> None: ...
+    def __init__(self, adapter: Adapter, *args, **kwargs) -> None: ...
 
     def __call__(self, response: Response, *args, **kwargs) -> Any: ...
 
 
-class UseCaseProtocol(Protocol):
+class UseCase(Protocol):
+    presenter: Presenter
 
-    def __init__(self, presenter: PresenterProtocol, *args, **kwargs) -> None: ...
+    def __call__(self, request: Request) -> Presenter:
+        try:
+            response = self.on_success(self.handle(request))
+        except Exception as error:
+            response = self.on_error(error)
+        finally:
+            return self.respond(response)
 
-    def __call__(self, request: Request) -> PresenterProtocol: ...
+    @abstractmethod
+    def handle(self, request: Request) -> Response:
+        raise NotImplementedError
+
+    def on_success(self, response: Response) -> Response:
+        return response
+
+    def on_error(self, error: Exception) -> Response:
+        return Response(error=error)
+
+    def respond(self, response: Response) -> Presenter:
+        return self.presenter(response)
 
 
-class RepositoryProtocol(Protocol):
+class Repository(Protocol[Entity]):
     """
     A Repository is responsible for storing and retrieving entities.
     No matter where the data come from, it could be a database or a plain file.
     """
+
+    @abstractmethod
     def save(self, entity: Entity) -> Entity: ...
 
+    @abstractmethod
     def get(self, id: EntityId) -> Entity: ...
 
+    @abstractmethod
     def delete(self, id: EntityId) -> None: ...
 
-    def search(self, **kwargs) -> List[Entity]: ...
+    @abstractmethod
+    def search(self, **kwargs) -> Union[Entity, List[Entity]]: ...
 
 
-class ServiceProtocol(Protocol):
+class Service(Protocol):
     """
     Services, different from repositories, do not handle storing and retrieval
     of entities state. It's more suitable for things like, e-mails sending.
     """
 
 
-class GatewayProtocol(Protocol):
+class Gateway(Protocol):
     """
     Gateways are responsible for integrating with external sources and abstract
     implementation details from inner components like Repositories and Services.
@@ -57,7 +80,7 @@ class GatewayProtocol(Protocol):
     """
 
 
-class ListenerProtocol(Protocol):
+class Listener(Protocol):
     """
     Any object which need to listen to a event must implement the EventListener
     protocol.
@@ -68,19 +91,19 @@ class ListenerProtocol(Protocol):
         raise NotImplementedError
 
 
-ListenersMap = Dict[Type[Event], Set[ListenerProtocol]]
+ListenersMap = Dict[Type[Event], Set[Listener]]
 
 
-class NotifierProtocol(Protocol):
+class Notifier(Protocol):
     """
     Manages events subscription and dispatching for different types of events.
     """
     listeners: ListenersMap
 
-    def subscribe(self, event: Type[Event], listener: ListenerProtocol):
+    def subscribe(self, event: Type[Event], listener: Listener):
         self.listeners.setdefault(event, set()).add(listener)
 
-    def unsubscribe(self, event: Type[Event], listener: ListenerProtocol):
+    def unsubscribe(self, event: Type[Event], listener: Listener):
         self.listeners.setdefault(event, set()).discard(listener)
 
     def notify(self, event: Event):

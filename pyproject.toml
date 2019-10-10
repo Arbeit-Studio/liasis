@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "liasis"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Pythonic Clean Architecture for the Web"
 authors = ["Johnny <johnny.w.santos@gmail.com>"]
 license = "MIT"

@@ -1,12 +1,12 @@
 from collections import Iterable
-from liasis.core import PresenterProtocol, AdapterProtocol
+from liasis.core import Presenter, Adapter
 from liasis.core.errors import DomainError, InfrastructureError
 
 
 # TODO: Handle cases like, search, pagination, and errors.
-class BaseHttpPresenter(PresenterProtocol):
+class BaseHttpPresenter(Presenter):
 
-    def __init__(self, adapter: AdapterProtocol, *args, **kwargs) -> None:
+    def __init__(self, adapter: Adapter, *args, **kwargs) -> None:
         self.adapter = adapter
 
     def __call__(self, response, *args, **kwargs):
