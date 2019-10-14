@@ -1,5 +1,6 @@
 from abc import abstractmethod
-from typing import List, Any, Dict, Type, Set, ClassVar, TypeVar, Union
+from functools import reduce
+from typing import List, Any, Dict, Type, Set, ClassVar, TypeVar, Union, Optional, Iterable
 from typing_extensions import Protocol
 
 from liasis.core.errors import InvalidEventError, InvalidEventVersionError, InvalidEventEntityError
@@ -10,15 +11,35 @@ from liasis.core.event import Event
 
 
 class Adapter(Protocol):
+    following: Optional['Adapter']
 
-    def __call__(self, response, *args, **kwargs): ...
+    @abstractmethod
+    def can_handle(self, response: Response) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def handle(self, response: Response) -> Any:
+        raise NotImplementedError
+
+    def __call__(self, response: Response) -> Any:
+        if self.can_handle(response):
+            return self.handle(response)
+        if self.following:
+            return self.following(response)
+        raise StopIteration
 
 
-class Presenter(Protocol):
+class Presenter:
+    adapters = Iterable[Type[Adapter]]
 
-    def __init__(self, adapter: Adapter, *args, **kwargs) -> None: ...
+    def __init__(self):
+        self.chain = reduce(lambda f, n: n(f), self.adapters[::-1], None)
 
-    def __call__(self, response: Response, *args, **kwargs) -> Any: ...
+    def __call__(self, response: Response) -> Any:
+        try:
+            return self.chain(response)
+        except StopIteration:
+            raise
 
 
 class UseCase(Protocol):
