@@ -3,7 +3,7 @@ from functools import reduce
 from typing import List, Any, Dict, Type, Set, ClassVar, TypeVar, Union, Optional, Iterable
 from typing_extensions import Protocol
 
-from liasis.core.errors import InvalidEventError, InvalidEventVersionError, InvalidEventEntityError
+from liasis.core.errors import InvalidEventError, InvalidEventVersionError, InvalidEventEntityError, NotHandledError
 from liasis.core.data import Response, Request
 from liasis.core.entity import EntityId, Entity
 
@@ -26,7 +26,7 @@ class Adapter(Protocol):
             return self.handle(response)
         if self.following:
             return self.following(response)
-        raise StopIteration
+        raise NotHandledError('The response was not handled by any adapter.', response)
 
 
 class Presenter:
@@ -38,7 +38,7 @@ class Presenter:
     def __call__(self, response: Response) -> Any:
         try:
             return self.chain(response)
-        except StopIteration:
+        except NotHandledError:
             raise
 
 
@@ -67,23 +67,26 @@ class UseCase(Protocol):
         return self.presenter(response)
 
 
-class Repository(Protocol[Entity]):
+E = TypeVar('E')
+
+
+class Repository(Protocol[E]):
     """
     A Repository is responsible for storing and retrieving entities.
     No matter where the data come from, it could be a database or a plain file.
     """
 
     @abstractmethod
-    def save(self, entity: Entity) -> Entity: ...
+    def save(self, entity: E) -> E: ...
 
     @abstractmethod
-    def get(self, id: EntityId) -> Entity: ...
+    def get(self, id: EntityId) -> E: ...
 
     @abstractmethod
     def delete(self, id: EntityId) -> None: ...
 
     @abstractmethod
-    def search(self, **kwargs) -> Union[Entity, List[Entity]]: ...
+    def search(self, **kwargs) -> Union[E, List[E]]: ...
 
 
 class Service(Protocol):
