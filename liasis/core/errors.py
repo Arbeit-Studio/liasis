@@ -60,3 +60,9 @@ class NetworkError(IOError):
 
 class ConfigError(InfrastructureError):
     """Base class for exceptions related to configuration"""
+
+
+class NotHandledError(Error):
+    """
+    Used to indicate something was not handled. Like in a CoR pattern.
+    """
