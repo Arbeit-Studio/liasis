@@ -13,12 +13,11 @@ poetry = 'liasis.cli:cli'
 
 [tool.poetry.dependencies]
 python = "^3.7"
-typing-extensions = "^3.7"
+typing-extensions = {version = "^3.7", python = '~3.7'}
 
 [tool.poetry.dev-dependencies]
-mypy = "^0.650.0"
-sphinx = "^2.2"
-pytest = "^5.3"
+sphinx = "^3.0.2"
+pytest = "^5.4.1"
 
 [build-system]
 requires = ["poetry>=0.12"]
