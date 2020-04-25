@@ -1,7 +1,4 @@
-from typing import Any, Optional, Callable
-
 from liasis import Request, Response
-from liasis.core.errors import Error
 from liasis.core.protocols import UseCase, Presenter
 
 

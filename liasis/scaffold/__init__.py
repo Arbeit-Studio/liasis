@@ -1,4 +1,4 @@
-from typing import Text
+from typing import *
 from pathlib import Path
 from shutil import copytree
 

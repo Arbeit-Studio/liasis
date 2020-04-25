@@ -1,5 +1,4 @@
-from abc import ABCMeta, abstractmethod
-from typing import NewType, Optional
+from typing import *
 from uuid import UUID
 
 
@@ -17,6 +16,9 @@ class EntityMetaClass(type):
 
 
 class Entity(metaclass=EntityMetaClass):
+
+    def __init__(self, id):
+        self.id = id
 
     def __eq__(self, other):
         return vars(self) == vars(other)

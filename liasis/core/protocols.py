@@ -1,7 +1,12 @@
+from __future__ import annotations
 from abc import abstractmethod
 from functools import reduce
-from typing import List, Any, Dict, Type, Set, ClassVar, TypeVar, Union, Optional, Iterable
-from typing_extensions import Protocol
+from typing import *
+
+try:
+    from typing import Protocol
+except ImportError:
+    from typing_extensions import Protocol
 
 from liasis.core.errors import InvalidEventError, InvalidEventVersionError, InvalidEventEntityError, NotHandledError
 from liasis.core.data import Response, Request

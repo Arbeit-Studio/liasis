@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import NewType, Optional
+from typing import *
 from uuid import UUID
 
 EventId = NewType('EventId', UUID)
