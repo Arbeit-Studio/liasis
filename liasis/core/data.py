@@ -1,26 +1,27 @@
 from dataclasses import dataclass, asdict
+from typing import *
 
 
 @dataclass
-class DTO:
+class Data:
 
     @classmethod
-    def of(cls, obj: object) -> 'DTO':
-        return cls(**obj.__dict__)
+    def of(cls, obj: object) -> 'Data':
+        raise NotImplementedError
 
     def asdict(self):
         return asdict(self)
 
 
 @dataclass
-class Request(DTO):
+class Request(Data):
     pass
 
 
 @dataclass
-class Response(DTO):
-    data: DTO = None
-    error: Exception = None
+class Response(Data):
+    data: Optional[Data] = None
+    error: Optional[Exception] = None
 
     @classmethod
     def of(cls, obj: object) -> 'Response':

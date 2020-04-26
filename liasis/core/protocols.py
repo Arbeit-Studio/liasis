@@ -10,9 +10,17 @@ except ImportError:
 
 from liasis.core.errors import InvalidEventError, InvalidEventVersionError, InvalidEventEntityError, NotHandledError
 from liasis.core.data import Response, Request
-from liasis.core.entity import EntityId, Entity
 
 from liasis.core.event import Event
+
+EntityId = Union[int, str]
+
+
+class Entity(Protocol):
+    """
+    An entity is just a identifiable objects with some meaning for the business.
+    """
+    id: EntityId
 
 
 class Adapter(Protocol):

@@ -1,7 +1,8 @@
+from typing import *
 
 
 class Singleton(object):
-    _instance = None
+    _instance: Any = None
 
     def __new__(class_, *args, **kwargs):
         if not isinstance(class_._instance, class_):
