@@ -1,11 +1,13 @@
 from uuid import uuid4
 
-from liasis import Entity
+from liasis import Entity, EntityId
+
+TodoId = EntityId  # renaming variables can give your api more expresion
 
 
 class Todo(Entity):
 
-    def __init__(self, id: str, description: str, done: bool) -> None:
+    def __init__(self, id: TodoId, description: str, done: bool) -> None:
         self.id = id
         self.description = description
         self.done = done

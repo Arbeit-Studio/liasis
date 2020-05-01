@@ -3,8 +3,12 @@ from __future__ import annotations
 from collections import defaultdict
 from uuid import uuid4
 
-from todolist.entities import Todo
+from todolist.entities import Todo, TodoId
 from todolist.exceptions import TodoNotInList
+
+from examples.todolist.todolist.exceptions import TodoAlreadyInList
+
+TodoListId = [str, int]
 
 
 class TodoList:
@@ -18,7 +22,7 @@ class TodoList:
     As long as your objects follow the structure from the protocols you are fine.
     """
 
-    def __init__(self, id: str, name: str, todos: list[Todo] = None):
+    def __init__(self, id: TodoListId, name: str, todos: list[Todo] = None):
         self.id = id
         self.name = name
         self.todos = todos or []
@@ -37,17 +41,30 @@ class TodoList:
         try:
             return self.todos.index(todo)
         except ValueError:
-            raise TodoNotInList(f'{todo} not in list')
+            raise TodoNotInList(f'{todo} not in list') from None
 
     def remove(self, todo: Todo):
         try:
             self.todos.remove(todo)
         except ValueError:
-            raise TodoNotInList(f'{todo} not in list')
+            raise TodoNotInList(f'{todo} not in list') from None
 
-    def insert(self, todo: Todo, at: int):
-        self.todos.insert(at, todo)
+    def insert(self, todo: Todo, at: Optional[int] = None):
+        if todo not in self.todos:
+            index = at if at is not None else len(self.todos)
+            self.todos.insert(index, todo)
+        else:
+            raise TodoAlreadyInList(f'{todo} is already in the list. Try to move it')
 
     def move(self, todo: Todo, to: int):
-        from_index = self.todos.index(todo)
+        try:
+            from_ = self.todos.index(todo)
+            self.todos.insert(to, self.todos.pop(from_))
+        except (ValueError, IndexError):
+            raise TodoNotInList(f'{todo} not in list') from None
 
+    def get(self, id: TodoId):
+        try:
+            return next(filter(lambda x: x.id == id,  self.todos))
+        except StopIteration:
+            raise TodoNotInList from None

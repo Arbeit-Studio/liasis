@@ -6,7 +6,12 @@ from todolist.entities.todolist import TodoList
 
 @fixture
 def new_todo():
-    return Todo.new('todo')
+    return Todo.new('new todo')
+
+
+@fixture
+def newer_todo():
+    return Todo.new('newer todo')
 
 
 @fixture

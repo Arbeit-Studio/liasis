@@ -12,7 +12,7 @@ class DomainError(Error):
 
 class BusinessRuleError(DomainError):
     """
-    A Generic exception to indicate a bussines rule not meet.
+    A Generic exception to indicate a business rule not meet.
     """
 
 
